@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Padauk } from "next/font/google";
 import "./globals.css";
+import ScrollToTop from "../components/ScrollToTop";
 
 const padauk = Padauk({
   variable: "--font-padauk",
@@ -57,6 +58,7 @@ export default function RootLayout({
             `,
           }}
         />
+        <ScrollToTop />
       </body>
     </html>
   );

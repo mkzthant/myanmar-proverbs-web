@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import Fuse from 'fuse.js';
 import Script from 'next/script';
+import Link from 'next/link';
 
 interface Proverb {
   id: string;
@@ -58,6 +59,20 @@ const CheckIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="20 6 9 17 4 12"></polyline>
   </svg>
+);
+
+const ShareIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="18" cy="5" r="3"></circle>
+    <circle cx="6" cy="12" r="3"></circle>
+    <circle cx="18" cy="19" r="3"></circle>
+    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+  </svg>
+);
+
+const ViewIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
 );
 
 export default function Home() {
@@ -144,6 +159,18 @@ export default function Home() {
     });
   }, []);
 
+  const shareContent = useCallback((id: string, original: string, text: string) => {
+    if (navigator.share) {
+      navigator.share({
+        title: original,
+        text: text,
+        url: `${window.location.origin}/proverb/${id}`
+      }).catch(console.error);
+    } else {
+      copyToClipboard(id, `${original}\n\n${text}`);
+    }
+  }, [copyToClipboard]);
+
   const toggleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
   };
@@ -204,14 +231,25 @@ export default function Home() {
                       {p.meaning.my.spoken || p.meaning.my.written}
                     </div>
                   </div>
-                  <button 
-                    className={`copy-btn ${copiedId === p.id ? 'copied' : ''}`}
-                    onClick={() => copyToClipboard(p.id, `${p.proverb.original}\n\n${p.meaning.my.spoken}`)}
-                    title="စကားပုံကူးယူရန် (Copy)"
-                    style={{ marginLeft: '12px' }}
-                  >
-                    {copiedId === p.id ? <CheckIcon /> : <CopyIcon />}
-                  </button>
+                  <div style={{ display: 'flex', gap: '4px', marginLeft: '12px' }}>
+                    <Link href={`/proverb/${p.id}`} className="copy-btn" title="သီးသန့်စာမျက်နှာသို့ သွားရန် (View Page)" style={{ textDecoration: 'none' }}>
+                      <ViewIcon />
+                    </Link>
+                    <button 
+                      className={`copy-btn ${copiedId === p.id ? 'copied' : ''}`}
+                      onClick={() => copyToClipboard(p.id, `${p.proverb.original}\n\n${p.meaning.my.spoken}`)}
+                      title="စကားပုံကူးယူရန် (Copy)"
+                    >
+                      {copiedId === p.id ? <CheckIcon /> : <CopyIcon />}
+                    </button>
+                    <button 
+                      className="copy-btn"
+                      onClick={() => shareContent(p.id, p.proverb.original, p.meaning.my.spoken)}
+                      title="မျှဝေရန် (Share)"
+                    >
+                      <ShareIcon />
+                    </button>
+                  </div>
                 </div>
                 
                 {/* Expand Toggle Hint */}
