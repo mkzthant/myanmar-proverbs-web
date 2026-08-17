@@ -214,21 +214,13 @@ export default function Home() {
                   </button>
                 </div>
                 
-                {/* Expanded Section for Story */}
-                {expandedId === p.id && p.story?.emotional?.my && (
-                  <div style={{ marginTop: '16px', padding: '12px', backgroundColor: 'var(--bg-secondary)', borderRadius: '8px', fontSize: '0.9rem', lineHeight: '1.8' }}>
-                    <strong>ပုံပြင်ဇာတ်လမ်း -</strong><br/>
-                    {p.story.emotional.my}
-                  </div>
-                )}
-                
                 {/* Expand Toggle Hint */}
                 {p.story?.emotional?.my && (
                   <div 
-                    onClick={() => toggleExpand(p.id)} 
-                    style={{ marginTop: '12px', fontSize: '0.8rem', color: 'var(--primary)', cursor: 'pointer', textAlign: 'center' }}
+                    onClick={(e) => { e.stopPropagation(); toggleExpand(p.id); }} 
+                    style={{ marginTop: '12px', fontSize: '0.9rem', color: 'var(--primary)', cursor: 'pointer', textAlign: 'center', background: 'var(--surface-hover)', padding: '8px', borderRadius: '6px', fontWeight: '500' }}
                   >
-                    {expandedId === p.id ? '▲ ဇာတ်လမ်းကို ဖျောက်မည်' : '▼ ပုံပြင်ဇာတ်လမ်းကို ဖတ်မည်'}
+                    📖 ပုံပြင်ဇာတ်လမ်းကို ဖတ်မည်
                   </div>
                 )}
               </div>
@@ -238,6 +230,22 @@ export default function Home() {
               ရှာဖွေနေသော စကားပုံ မတွေ့ရှိပါခင်ဗျာ။
             </div>
           )}
+        </div>
+      )}
+
+      {/* Story Modal */}
+      {expandedId && (
+        <div className="modal-overlay" onClick={() => setExpandedId(null)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>{allProverbs.find(p => p.id === expandedId)?.proverb.original}</h3>
+              <button className="close-btn" onClick={() => setExpandedId(null)}>✕</button>
+            </div>
+            <div className="modal-body">
+              <strong>ပုံပြင်ဇာတ်လမ်း</strong><br/><br/>
+              {allProverbs.find(p => p.id === expandedId)?.story?.emotional?.my}
+            </div>
+          </div>
         </div>
       )}
 
