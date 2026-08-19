@@ -222,43 +222,58 @@ export default function Home() {
       ) : (
         <div className="words-container">
           {filteredProverbs.length > 0 ? (
-            filteredProverbs.map((p) => (
-              <div key={p.id} className="word-card" style={{ display: 'block', padding: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div style={{ cursor: 'pointer', flex: 1 }} onClick={() => toggleExpand(p.id)}>
-                    <div className="word-text" style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{p.proverb.original}</div>
-                    <div className="word-note" style={{ marginTop: '8px', lineHeight: '1.6' }}>
-                      {p.meaning.my.spoken || p.meaning.my.written}
+            filteredProverbs.map((p, index) => (
+              <div key={p.id} style={{ display: 'contents' }}>
+                <div className="word-card" style={{ display: 'block', padding: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div style={{ cursor: 'pointer', flex: 1 }} onClick={() => toggleExpand(p.id)}>
+                      <div className="word-text" style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{p.proverb.original}</div>
+                      <div className="word-note" style={{ marginTop: '8px', lineHeight: '1.6' }}>
+                        {p.meaning.my.spoken || p.meaning.my.written}
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '4px', marginLeft: '12px' }}>
+                      <Link href={`/proverb/${p.id}`} className="copy-btn" title="သီးသန့်စာမျက်နှာသို့ သွားရန် (View Page)" style={{ textDecoration: 'none' }}>
+                        <ViewIcon />
+                      </Link>
+                      <button 
+                        className={`copy-btn ${copiedId === p.id ? 'copied' : ''}`}
+                        onClick={() => copyToClipboard(p.id, `${p.proverb.original}\n\n${p.meaning.my.spoken}`)}
+                        title="စကားပုံကူးယူရန် (Copy)"
+                      >
+                        {copiedId === p.id ? <CheckIcon /> : <CopyIcon />}
+                      </button>
+                      <button 
+                        className="copy-btn"
+                        onClick={() => shareContent(p.id, p.proverb.original, p.meaning.my.spoken)}
+                        title="မျှဝေရန် (Share)"
+                      >
+                        <ShareIcon />
+                      </button>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '4px', marginLeft: '12px' }}>
-                    <Link href={`/proverb/${p.id}`} className="copy-btn" title="သီးသန့်စာမျက်နှာသို့ သွားရန် (View Page)" style={{ textDecoration: 'none' }}>
-                      <ViewIcon />
-                    </Link>
-                    <button 
-                      className={`copy-btn ${copiedId === p.id ? 'copied' : ''}`}
-                      onClick={() => copyToClipboard(p.id, `${p.proverb.original}\n\n${p.meaning.my.spoken}`)}
-                      title="စကားပုံကူးယူရန် (Copy)"
+                  
+                  {/* Expand Toggle Hint */}
+                  {p.story?.emotional?.my && (
+                    <div 
+                      onClick={(e) => { e.stopPropagation(); toggleExpand(p.id); }} 
+                      style={{ marginTop: '12px', fontSize: '0.9rem', color: 'var(--primary)', cursor: 'pointer', textAlign: 'center', background: 'var(--surface-hover)', padding: '8px', borderRadius: '6px', fontWeight: '500' }}
                     >
-                      {copiedId === p.id ? <CheckIcon /> : <CopyIcon />}
-                    </button>
-                    <button 
-                      className="copy-btn"
-                      onClick={() => shareContent(p.id, p.proverb.original, p.meaning.my.spoken)}
-                      title="မျှဝေရန် (Share)"
-                    >
-                      <ShareIcon />
-                    </button>
-                  </div>
+                      📖 ပုံပြင်ဇာတ်လမ်းကို ဖတ်မည်
+                    </div>
+                  )}
                 </div>
-                
-                {/* Expand Toggle Hint */}
-                {p.story?.emotional?.my && (
-                  <div 
-                    onClick={(e) => { e.stopPropagation(); toggleExpand(p.id); }} 
-                    style={{ marginTop: '12px', fontSize: '0.9rem', color: 'var(--primary)', cursor: 'pointer', textAlign: 'center', background: 'var(--surface-hover)', padding: '8px', borderRadius: '6px', fontWeight: '500' }}
-                  >
-                    📖 ပုံပြင်ဇာတ်လမ်းကို ဖတ်မည်
+
+                {/* Native Banner Ad after the 8th item (or at the end if list is short) */}
+                {(index === 7 || (filteredProverbs.length > 4 && filteredProverbs.length < 8 && index === filteredProverbs.length - 1)) && (
+                  <div style={{ gridColumn: '1 / -1', margin: '20px 0', display: 'flex', justifyContent: 'center', width: '100%', minHeight: '50px' }}>
+                    <div id="container-1dd8b2a7c356b115a6426e8d4dde4d02"></div>
+                    <Script 
+                      id={`adsterra-banner-${index}`}
+                      src="https://pl30889812.effectivecpmnetwork.com/1dd8b2a7c356b115a6426e8d4dde4d02/invoke.js"
+                      strategy="lazyOnload"
+                      data-cfasync="false"
+                    />
                   </div>
                 )}
               </div>
@@ -286,17 +301,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
-      {/* Adsterra Banner Ad */}
-      <div style={{ margin: '30px 0', display: 'flex', justifyContent: 'center', width: '100%', minHeight: '50px' }}>
-        <div id="container-1dd8b2a7c356b115a6426e8d4dde4d02"></div>
-        <Script 
-          id="adsterra-banner"
-          src="https://pl30889812.effectivecpmnetwork.com/1dd8b2a7c356b115a6426e8d4dde4d02/invoke.js"
-          strategy="lazyOnload"
-          data-cfasync="false"
-        />
-      </div>
     </main>
   );
 }
