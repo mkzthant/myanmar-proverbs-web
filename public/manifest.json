@@ -4,8 +4,8 @@
   "description": "Myanmar Proverbs Lexicon Reference",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1e1e1e",
+  "background_color": "#121212",
+  "theme_color": "#121212",
   "icons": [
     {
       "src": "icon.svg",

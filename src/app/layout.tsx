@@ -14,6 +14,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://mm-proverbs.mnote.pp.ua/"),
   title: "မြန်မာစကားပုံ | Myanmar Proverbs Dictionary",
   description: "မြန်မာစကားပုံ (၈၆၇) ခု၏ အဓိပ္ပာယ်နှင့် ရှင်းလင်းချက်များကို အလွယ်တကူ ရှာဖွေနိုင်သော Web App ဖြစ်ပါသည်။",
   keywords: ["မြန်မာစာ", "စကားပုံ", "Myanmar", "Proverbs", "Dictionary", "မြန်မာစကားပုံ အဘိဓာန်"],
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
     siteName: "မြန်မာစကားပုံ",
     images: [
       {
-        url: "/icon.svg",
+        url: "https://mm-proverbs.mnote.pp.ua/icon.svg",
         width: 512,
         height: 512,
       },

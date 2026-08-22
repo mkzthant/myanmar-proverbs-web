@@ -1,22 +1,10 @@
-const CACHE_NAME = 'myanmar-proverbs-data-v2';
+const CACHE_NAME = 'mm-proverbs-shell-v3';
 
-// Only cache the data file - never cache hashed JS/CSS
-const DATA_URL = '/proverbs_data.json';
-
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      // Pre-cache only the big data file
-      return cache.add(DATA_URL);
-    }).catch(() => {
-      // Silently fail on install - don't block the page
-    })
-  );
+self.addEventListener('install', () => {
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  // Remove ALL old caches
   event.waitUntil(
     caches.keys().then((cacheNames) =>
       Promise.all(
@@ -29,26 +17,39 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
+  const { request } = event;
+  if (request.method !== 'GET') return;
 
-  // Only intercept the data JSON file
-  if (url.pathname.endsWith('proverbs_data.json')) {
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+
+  // Navigations: network-first with offline fallback to cache
+  if (request.mode === 'navigate') {
     event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
-        const fetchPromise = fetch(event.request).then((networkResponse) => {
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, networkResponse.clone());
-          });
-          return networkResponse;
-        }).catch(() => {
-          // Ignore network errors
-        });
-        return cachedResponse || fetchPromise;
-      })
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          return response;
+        })
+        .catch(() => caches.match(request))
     );
     return;
   }
 
-  // For all other requests (HTML, CSS, JS): let browser handle normally
-  // Do NOT intercept - prevents hash filename conflicts
+  // Static assets: stale-while-revalidate
+  event.respondWith(
+    caches.match(request).then((cached) => {
+      const fetchPromise = fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => cached);
+      return cached || fetchPromise;
+    })
+  );
 });

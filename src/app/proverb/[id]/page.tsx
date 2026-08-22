@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import NativeBanner from '../../../components/NativeBanner';
+import ShareActions from '../../../components/ShareActions';
 
 interface Proverb {
   id: string;
@@ -66,6 +68,18 @@ export default async function ProverbPage(props: { params: Promise<{ id: string 
 
   return (
     <main className="container">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Quotation',
+            text: proverbData.proverb.original,
+            abstract: proverbData.meaning.my.spoken || proverbData.meaning.my.written,
+            url: `https://mm-proverbs.mnote.pp.ua/proverb/${proverbData.id}`,
+          }),
+        }}
+      />
       <div style={{ marginTop: '2rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <Link href="/" style={{ color: 'var(--primary)', textDecoration: 'none' }}>
@@ -91,7 +105,17 @@ export default async function ProverbPage(props: { params: Promise<{ id: string 
               </p>
             </div>
           )}
+
+          <ShareActions
+            text={`${proverbData.proverb.original}\n\n${proverbData.meaning.my.spoken || proverbData.meaning.my.written}`}
+            path={`/proverb/${proverbData.id}`}
+          />
         </div>
+
+        <NativeBanner
+          src="https://pl30889812.effectivecpmnetwork.com/1dd8b2a7c356b115a6426e8d4dde4d02/invoke.js"
+          containerId="container-1dd8b2a7c356b115a6426e8d4dde4d02"
+        />
       </div>
     </main>
   );
