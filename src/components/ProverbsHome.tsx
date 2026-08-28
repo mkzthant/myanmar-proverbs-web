@@ -5,6 +5,7 @@ import Fuse from 'fuse.js';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import NativeBanner from './NativeBanner';
+import BannerAd from './BannerAd';
 
 interface Proverb {
   id: string;
@@ -202,7 +203,7 @@ export default function ProverbsHome({ proverbs }: { proverbs: Proverb[] }) {
   };
 
   return (
-    <main className="container">
+    <main className="container" style={{ paddingBottom: '70px' }}>
 
       <div className="header">
         <div className="header-top">
@@ -361,6 +362,26 @@ export default function ProverbsHome({ proverbs }: { proverbs: Proverb[] }) {
           </div>
         </div>
       )}
+
+      <div
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          display: 'flex',
+          justifyContent: 'center',
+          background: 'var(--surface)',
+          padding: '4px 0',
+          borderTop: '1px solid var(--border)',
+        }}
+      >
+        <BannerAd
+          keyId="dea00178dcbeeb13beeb504653e333f8"
+          src="https://www.highrevenueformat.com/dea00178dcbeeb13beeb504653e333f8/invoke.js"
+        />
+      </div>
     </main>
   );
 }
