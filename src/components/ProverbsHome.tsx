@@ -333,7 +333,7 @@ export default function ProverbsHome({ proverbs }: { proverbs: Proverb[] }) {
               {(index === 7 || (filteredProverbs.length > 4 && filteredProverbs.length < 8 && index === filteredProverbs.length - 1)) && (
                 <div style={{ gridColumn: '1 / -1' }}>
                   <NativeBanner
-                    src="https://pl30889812.effectivecpmnetwork.com/1dd8b2a7c356b115a6426e8d4dde4d02/invoke.js"
+                    src="https://pl30889812.profitableratecpmnetwork.com/1dd8b2a7c356b115a6426e8d4dde4d02/invoke.js"
                     containerId="container-1dd8b2a7c356b115a6426e8d4dde4d02"
                   />
                 </div>
